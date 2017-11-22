@@ -2,18 +2,35 @@ package ua.com.juja.microservices.service.registry;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
 
 /**
  * @author Danil Kuznetsov (kuznetsov.danil.v@gmail.com)
  */
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest(webEnvironment = DEFINED_PORT)
 public class ServiceRegistryApplicationTest {
-    @Test
-    public void contextLoads() {
+    @Autowired
+    private TestRestTemplate testRestTemplate;
 
+
+    @Test
+    public void catalogLoads() {
+        @SuppressWarnings("rawtypes")
+        ResponseEntity<Map> entity = testRestTemplate.getForEntity("/eureka/apps", Map.class);
+        assertEquals(HttpStatus.OK, entity.getStatusCode());
     }
+
 }
